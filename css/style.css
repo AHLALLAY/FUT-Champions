@@ -1,0 +1,44 @@
+* {
+    margin: 0%;
+    padding: 0%;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 600;
+    font-size: medium;
+}
+
+.container {
+    display: flex;
+    direction: rtl;
+}
+
+aside {
+    padding: 5px;
+    text-align: center;
+    width: 20vw;
+    height: 100vh;
+}
+
+.addBTN {
+    border: none;
+    background-image: linear-gradient(to right, rgb(227, 255, 185), rgb(52, 86, 2));
+    border-radius: 10px;
+    padding: 5px;
+    color: green;
+}
+
+.addBTN:hover {
+    color: white;
+    background-image:linear-gradient( rgb(227, 255, 185), rgb(52, 86, 2));
+    transform: scale(1.2);
+    transition: ease-out 0.3s;
+}
+
+main {
+    width: 100vw;
+    height: 100vh;
+    background-image: linear-gradient(rgba(15, 124, 15, 0.4), rgba(188, 220, 188, 0.3)), url(/asset/th-1957321112.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
