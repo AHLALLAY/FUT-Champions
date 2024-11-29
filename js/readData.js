@@ -542,3 +542,4 @@ function filterPlayers() {
 
 // Initialize and render players on page load
 initializeFilters();
+renderPlayers(allPlayers.players);
