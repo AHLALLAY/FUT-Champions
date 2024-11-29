@@ -540,6 +540,10 @@ function filterPlayers() {
     renderPlayers(filteredPlayers);
 }
 
+
+// Event listeners
+document.getElementById('positionFilter').addEventListener('change', filterPlayers);
+
 // Initialize and render players on page load
 initializeFilters();
 renderPlayers(allPlayers.players);
