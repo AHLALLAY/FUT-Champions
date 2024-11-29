@@ -13,11 +13,12 @@
     <!-- Sidebar -->
     <aside class="w-64 bg-gray-800 shadow-lg p-6 space-y-6 h-screen">
         <h2 class="text-2xl font-bold text-white">FUT Players</h2>
-        
+
         <!-- Boutons -->
         <div class="space-y-2">
             <button class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
-                <a class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors" href="/Views/showData.html">
+                <a class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+                    href="/Views/showData.html">
                     Show Players
                 </a>
             </button>
@@ -25,15 +26,12 @@
                 New Player
             </button>
         </div>
-        
+
         <!-- Section Formules -->
         <div class="space-y-3">
             <h2 class="text-xl font-semibold text-white">Formules</h2>
-            <select 
-                name="formule" 
-                id="formule" 
-                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
+            <select name="formule" id="formule"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="4-4-2">4-4-2</option>
                 <option value="4-3-3">4-3-3</option>
             </select>
@@ -48,107 +46,118 @@
     </main>
 
     <!-- Modal d'ajout de joueur -->
-<div id="playerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-600 text-gray-700 p-6 rounded-lg w-[600px]">
-        <h2 class="text-xl font-bold mb-4">Ajouter un joueur</h2>
-        <form id="playerForm" class="space-y-4">
-            <!-- Informations de base -->
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block mb-1">Nom complet</label>
-                    <input type="text" id="playerName" name="name" required class="w-full p-2 border rounded">
-                </div>
-                <div>
-                    <label class="block mb-1">Nom court</label>
+    <div id="playerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
+        <div
+            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-600 text-gray-700 p-6 rounded-lg w-[600px]">
+            <h2 class="text-xl font-bold mb-4">Ajouter un joueur</h2>
+            <form id="playerForm" class="space-y-4">
+                <!-- Informations de base -->
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <input type="file" id="playerShortName" name="short_name" accept="image/*" class="w-full p-2 border rounded">
+                        <label class="block mb-1">Nom complet</label>
+                        <input type="text" id="playerName" name="name" required class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Nom court</label>
+                        <div>
+                            <input type="file" id="playerShortName" name="short_name" accept="image/*"
+                                class="w-full p-2 border rounded">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Caractéristiques principales -->
-            <div class="grid grid-cols-3 gap-4">
-                <div>
-                    <label class="block mb-1">Overall</label>
-                    <input type="number" id="overall" name="overall" min="1" max="99" required class="w-full p-2 border rounded">
+                <!-- Caractéristiques principales -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="block mb-1">Overall</label>
+                        <input type="number" id="overall" name="overall" min="1" max="99" required
+                            class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Position</label>
+                        <select id="position" name="player_positions" required class="w-full p-2 border rounded">
+                            <option value="">Select...</option>
+                            <option value="GK">GK</option>
+                            <option value="LB">LB</option>
+                            <option value="CB1">CB1</option>
+                            <option value="CB2">CB2</option>
+                            <option value="RB">RB</option>
+                            <option value="LM">LM</option>
+                            <option value="CM1">CM1</option>
+                            <option value="CM2">CM2</option>
+                            <option value="RM">RM</option>
+                            <option value="ST1">ST1</option>
+                            <option value="ST2">ST2</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1">Âge</label>
+                        <input type="number" id="age" name="age" min="16" max="45" required
+                            class="w-full p-2 border rounded">
+                    </div>
                 </div>
-                <div>
-                    <label class="block mb-1">Position</label>
-                    <select id="position" name="player_positions" required class="w-full p-2 border rounded">
-                        <option value="">Select...</option>
-                        <option value="GK">GK</option>
-                        <option value="LB">LB</option>
-                        <option value="CB1">CB1</option>
-                        <option value="CB2">CB2</option>
-                        <option value="RB">RB</option>
-                        <option value="LM">LM</option>
-                        <option value="CM1">CM1</option>
-                        <option value="CM2">CM2</option>
-                        <option value="RM">RM</option>
-                        <option value="ST1">ST1</option>
-                        <option value="ST2">ST2</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block mb-1">Âge</label>
-                    <input type="number" id="age" name="age" min="16" max="45" required class="w-full p-2 border rounded">
-                </div>
-            </div>
 
-            <!-- Stats techniques dynamiques -->
-            <div id="statsSection" class="grid grid-cols-3 gap-4">
-                <div>
-                    <label class="block mb-1">Pace</label>
-                    <input type="number" id="pace" name="pace" min="1" max="99" required class="w-full p-2 border rounded">
+                <!-- Stats techniques dynamiques -->
+                <div id="statsSection" class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="block mb-1">Pace</label>
+                        <input type="number" id="pace" name="pace" min="1" max="99" required
+                            class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Shooting</label>
+                        <input type="number" id="shooting" name="shooting" min="1" max="99" required
+                            class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Passing</label>
+                        <input type="number" id="passing" name="passing" min="1" max="99" required
+                            class="w-full p-2 border rounded">
+                    </div>
                 </div>
-                <div>
-                    <label class="block mb-1">Shooting</label>
-                    <input type="number" id="shooting" name="shooting" min="1" max="99" required class="w-full p-2 border rounded">
+                <div id="additionalStatsSection" class="grid grid-cols-3 gap-4 hidden">
+                    <div>
+                        <label class="block mb-1">Dribbling</label>
+                        <input type="number" id="dribbling" name="dribbling" min="1" max="99" required
+                            class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Defending</label>
+                        <input type="number" id="defending" name="defending" min="1" max="99" required
+                            class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Physicality</label>
+                        <input type="number" id="physicality" name="physicality" min="1" max="99" required
+                            class="w-full p-2 border rounded">
+                    </div>
                 </div>
-                <div>
-                    <label class="block mb-1">Passing</label>
-                    <input type="number" id="passing" name="passing" min="1" max="99" required class="w-full p-2 border rounded">
-                </div>
-            </div>
-            <div id="additionalStatsSection" class="grid grid-cols-3 gap-4 hidden">
-                <div>
-                    <label class="block mb-1">Dribbling</label>
-                    <input type="number" id="dribbling" name="dribbling" min="1" max="99" required class="w-full p-2 border rounded">
-                </div>
-                <div>
-                    <label class="block mb-1">Defending</label>
-                    <input type="number" id="defending" name="defending" min="1" max="99" required class="w-full p-2 border rounded">
-                </div>
-                <div>
-                    <label class="block mb-1">Physicality</label>
-                    <input type="number" id="physicality" name="physicality" min="1" max="99" required class="w-full p-2 border rounded">
-                </div>
-            </div>
 
-            <!-- Informations supplémentaires -->
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block mb-1">Nationalité</label>
-                    <input type="text" id="nationality" name="nationality" required class="w-full p-2 border rounded">
+                <!-- Informations supplémentaires -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1">Nationalité</label>
+                        <input type="text" id="nationality" name="nationality" required
+                            class="w-full p-2 border rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Club</label>
+                        <input type="text" id="club" name="club" required class="w-full p-2 border rounded">
+                    </div>
                 </div>
-                <div>
-                    <label class="block mb-1">Club</label>
-                    <input type="text" id="club" name="club" required class="w-full p-2 border rounded">
-                </div>
-            </div>
 
-            <!-- Boutons -->
-            <div class="flex space-x-4">
-                <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-                    Ajouter
-                </button>
-                <button type="button" id="cancelBtn" class="flex-1 bg-gray-300 hover:bg-gray-400 py-2 px-4 rounded">
-                    Annuler
-                </button>
-            </div>
-        </form>
+                <!-- Boutons -->
+                <div class="flex space-x-4">
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+                        Ajouter
+                    </button>
+                    <button type="button" id="cancelBtn" class="flex-1 bg-gray-300 hover:bg-gray-400 py-2 px-4 rounded">
+                        Annuler
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
     <script src="/js/index.js"></script>
 </body>
