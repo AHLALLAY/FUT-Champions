@@ -540,6 +540,20 @@ function filterPlayers() {
     renderPlayers(filteredPlayers);
 }
 
+// Function to add a player to localStorage
+function addToLocalStorage(player) {
+    let playersInStorage = JSON.parse(localStorage.getItem('selectedPlayers')) || [];
+
+    // Check if the player is already in the storage
+    const existingPlayer = playersInStorage.find(p => p.name === player.name);
+    if (!existingPlayer) {
+        playersInStorage.push(player);
+        localStorage.setItem('selectedPlayers', JSON.stringify(playersInStorage));
+        alert(`${player.name} has been added to your selected players.`);
+    } else {
+        alert(`${player.name} is already in your selected players.`);
+    }
+}
 
 // Event listeners
 document.getElementById('positionFilter').addEventListener('change', filterPlayers);
