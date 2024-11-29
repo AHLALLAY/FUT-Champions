@@ -431,6 +431,102 @@ function initializeFilters() {
     });
 }
 
+// Render players
+function renderPlayers(players) {
+    const container = document.getElementById('players');
+    container.innerHTML = '';
+
+    players.forEach(player => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-lg shadow-lg p-4 space-y-4';
+
+
+        card.innerHTML = `
+            <div class="flex items-center space-x-4">
+                <img src="${player.photo}" alt="${player.name}" class="w-16 h-16 rounded-full object-cover"/>
+                <div>
+                    <h3 class="font-bold">${player.name}</h3>
+                    <div class="flex items-center space-x-2">
+                        <img src="${player.flag}" alt="${player.nationality}" class="w-6 h-4"/>
+                        <span class="text-sm text-gray-600">${player.nationality}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <img src="${player.logo}" alt="${player.club}" class="w-8 h-8"/>
+                    <span class="text-sm">${player.club}</span>
+                </div>
+                <div>
+                    <span class="text-lg font-bold text-blue-600">${player.rating}</span>
+                    <span class="text-lg font-bold text-blue-600">${player.position}</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-sm">
+                <div class="text-center">
+                    <div class="font-semibold">PAC</div>
+                    <div>${player.pace || '-'}</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-semibold">SHO</div>
+                    <div>${player.shooting || '-'}</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-semibold">PAS</div>
+                    <div>${player.passing || '-'}</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-semibold">DRI</div>
+                    <div>${player.dribbling || '-'}</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-semibold">DEF</div>
+                    <div>${player.defending || '-'}</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-semibold">PHY</div>
+                    <div>${player.physical || '-'}</div>
+                </div>
+            </div>
+        `;
+
+        // Check if the player is a goalkeeper (GK) and update stats
+        if (player.position === 'GK') {
+            const statsContainer = card.querySelector('.grid');
+            statsContainer.innerHTML = `
+                <div class="text-center">
+                    <div class="font-semibold">Diving</div>
+                    <div>${player.diving || '-'}</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-semibold">Handling</div>
+                    <div>${player.handling || '-'}</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-semibold">Kicking</div>
+                    <div>${player.kicking || '-'}</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-semibold">Reflexes</div>
+                    <div>${player.reflexes || '-'}</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-semibold">Speed</div>
+                    <div>${player.speed || '-'}</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-semibold">Positioning</div>
+                    <div>${player.positioning || '-'}</div>
+                </div>
+            `;
+        }
+
+        // Add click event listener to each card
+        card.addEventListener('click', () => addToLocalStorage(player));
+
+        container.appendChild(card);
+    });
+}
 
 
 // Filter handling
