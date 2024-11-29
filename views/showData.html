@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Players Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex flex-col sm:flex-row min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-full sm:w-64 bg-gray-800 text-white p-4 sm:p-6">
+            <nav class="space-y-6">
+                <!-- Home Button -->
+                <header class="space-y-4">
+                    <a href="/index.html" class="block px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-center transition">
+                        Home Page
+                    </a>
+                </header>
+
+                <!-- Filters -->
+                <section class="space-y-4">
+                    <h1 class="text-lg font-semibold">Filters</h1>
+                    <!-- Position Filter -->
+                    <form>
+                        <label for="positionFilter" class="block text-sm mb-2">Position</label>
+                        <select id="positionFilter" class="w-full p-2 rounded bg-gray-700 text-white">
+                            <option value="">All Positions</option>
+                        </select>
+                    </form>
+                </section>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 sm:p-8 overflow-auto">
+            <section id="players" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6" aria-label="Players Grid">
+                <!-- Players will be inserted here -->
+            </section>
+        </main>
+    </div>
+
+    <script src="/JS/readData.js"></script>
+</body>
+</html>
