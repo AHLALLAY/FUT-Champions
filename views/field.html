@@ -5,161 +5,184 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FUT</title>
-    <!-- Ajout du CDN Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 min-h-screen flex">
-    <!-- Sidebar -->
-    <aside class="w-full sm:w-48 md:w-64 bg-gray-800 shadow-lg p-6 space-y-6 h-screen">
-        <h2 class="text-2xl font-bold text-white">FUT Players</h2>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Top bar for mobile / Sidebar for desktop -->
+    <aside class="bg-gray-800 shadow-lg w-full sm:w-48 md:w-64 sm:h-screen sm:fixed">
+        <div class="p-4 sm:p-6 flex flex-col space-y-4">
+            <!-- Header -->
+            <h2 class="text-xl sm:text-2xl font-bold text-white">FUT Players</h2>
 
-        <!-- Boutons -->
-        <div class="space-y-2">
-            <button class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
-                <a href="/home.html"
-                    class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
-                    Show Players
+            <!-- Navigation buttons -->
+            <div class="flex sm:flex-col space-x-2 sm:space-x-0 sm:space-y-2">
+                <a href="/home.html" class="flex-1 sm:flex-none">
+                    <button
+                        class="w-full bg-blue-500 text-white py-2 px-2 rounded-lg hover:bg-blue-600 transition-colors text-sm sm:text-base">
+                        Home
+                    </button>
                 </a>
-            </button>
-            <button class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
-                id="newPlayerBtn">
-                New Player
-            </button>
-        </div>
+                <button
+                    class="flex-1 sm:flex-none bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors text-sm sm:text-base"
+                    id="newPlayerBtn">
+                    New Player
+                </button>
+            </div>
 
-        <!-- Section Formules -->
-        <div class="space-y-3">
-            <h2 class="text-xl font-semibold text-white">Formules</h2>
-            <select name="formule" id="formule"
-                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option value="4-4-2">4-4-2</option>
-                <option value="4-3-3">4-3-3</option>
-            </select>
+            <!-- Formations selector -->
+            <div class="hidden sm:block space-y-3">
+                <h2 class="text-lg sm:text-xl font-semibold text-white">Formules</h2>
+                <select name="formule" id="formule"
+                    class="w-full p-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="4-4-2">4-4-2</option>
+                    <option value="4-3-3">4-3-3</option>
+                </select>
+            </div>
+
+            <!-- player selected -->
+            <div id="team" class="grid-cols-1"></div>
         </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 p-8 overflow-auto">
-        <div id="field" class="bg-white rounded-lg shadow-lg p-6">
-            <!-- Le terrain sera ajouté ici dynamiquement -->
+    <main class="sm:ml-48 md:ml-64 flex-1 p-4 sm:p-8">
+        <!-- Mobile-only formations selector -->
+        <div class="mb-4 sm:hidden">
+            <select name="formule-mobile" id="formule-mobile"
+                class="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="4-4-2">4-4-2</option>
+                <option value="4-3-3">4-3-3</option>
+            </select>
+        </div>
+
+        <div id="field" class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+            <!-- Field content will be added dynamically -->
         </div>
     </main>
 
-    <!-- Modal d'ajout de joueur -->
-    <div id="playerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
-        <div
-            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-600 text-gray-700 p-6 rounded-lg w-full sm:max-w-md md:max-w-lg">
-            <h2 class="text-xl font-bold mb-4">Ajouter un joueur</h2>
-            <form id="playerForm" class="space-y-4">
-                <!-- Informations de base -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block mb-1">Nom complet</label>
-                        <input type="text" id="playerName" name="name" required class="w-full p-2 border rounded">
-                    </div>
-                    <div>
-                        <label class="block mb-1">Nom court</label>
-                        <input type="file" id="playerShortName" name="short_name" accept="image/*"
-                            class="w-full p-2 border rounded">
-                    </div>
-                </div>
+    <!-- Modal -->
+    <div id="playerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="fixed inset-0 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4">
+                <div class="bg-white rounded-lg shadow-xl w-full max-w-lg mx-auto p-4 sm:p-6">
+                    <h2 class="text-lg sm:text-xl font-bold mb-4">Add Player</h2>
+                    <form id="playerForm" class="space-y-4">
+                        <!-- Basic Info -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Full Name</label>
+                                <input type="text" id="playerName" name="name" required
+                                    class="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Short Name</label>
+                                <input type="file" id="playerShortName" name="short_name" accept="image/*"
+                                    class="w-full p-2 text-sm border rounded">
+                            </div>
+                        </div>
 
-                <!-- Caractéristiques principales -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block mb-1">Overall</label>
-                        <input type="number" id="overall" name="overall" min="1" max="99" required
-                            class="w-full p-2 border rounded">
-                    </div>
-                    <div>
-                        <label class="block mb-1">Position</label>
-                        <select id="position" name="player_positions" required class="w-full p-2 border rounded">
-                            <option value="">Select...</option>
-                            <option value="GK">GK</option>
-                            <option value="LB">LB</option>
-                            <option value="CB1">CB1</option>
-                            <option value="CB2">CB2</option>
-                            <option value="RB">RB</option>
-                            <option value="LM">LM</option>
-                            <option value="CM1">CM1</option>
-                            <option value="CM2">CM2</option>
-                            <option value="RM">RM</option>
-                            <option value="ST1">ST1</option>
-                            <option value="ST2">ST2</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block mb-1">Âge</label>
-                        <input type="number" id="age" name="age" min="16" max="45" required
-                            class="w-full p-2 border rounded">
-                    </div>
-                </div>
+                        <!-- Main Stats -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Overall</label>
+                                <input type="number" id="overall" name="overall" min="1" max="99" required
+                                    class="w-full p-2 text-sm border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Position</label>
+                                <select id="position" name="player_positions" required
+                                    class="w-full p-2 text-sm border rounded">
+                                    <option value="">Select...</option>
+                                    <option value="GK">GK</option>
+                                    <option value="LB">LB</option>
+                                    <option value="CB1">CB1</option>
+                                    <option value="CB2">CB2</option>
+                                    <option value="RB">RB</option>
+                                    <option value="LM">LM</option>
+                                    <option value="CM1">CM1</option>
+                                    <option value="CM2">CM2</option>
+                                    <option value="RM">RM</option>
+                                    <option value="ST1">ST1</option>
+                                    <option value="ST2">ST2</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Age</label>
+                                <input type="number" id="age" name="age" min="16" max="45" required
+                                    class="w-full p-2 text-sm border rounded">
+                            </div>
+                        </div>
 
-                <!-- Stats techniques dynamiques -->
-                <div id="statsSection" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block mb-1">Pace</label>
-                        <input type="number" id="pace" name="pace" min="1" max="99" required
-                            class="w-full p-2 border rounded">
-                    </div>
-                    <div>
-                        <label class="block mb-1">Shooting</label>
-                        <input type="number" id="shooting" name="shooting" min="1" max="99" required
-                            class="w-full p-2 border rounded">
-                    </div>
-                    <div>
-                        <label class="block mb-1">Passing</label>
-                        <input type="number" id="passing" name="passing" min="1" max="99" required
-                            class="w-full p-2 border rounded">
-                    </div>
-                </div>
+                        <!-- Technical Stats -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Pace</label>
+                                <input type="number" id="pace" name="pace" min="1" max="99" required
+                                    class="w-full p-2 text-sm border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Shooting</label>
+                                <input type="number" id="shooting" name="shooting" min="1" max="99" required
+                                    class="w-full p-2 text-sm border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Passing</label>
+                                <input type="number" id="passing" name="passing" min="1" max="99" required
+                                    class="w-full p-2 text-sm border rounded">
+                            </div>
+                        </div>
 
-                <div id="additionalStatsSection" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 hidden">
-                    <div>
-                        <label class="block mb-1">Dribbling</label>
-                        <input type="number" id="dribbling" name="dribbling" min="1" max="99" required
-                            class="w-full p-2 border rounded">
-                    </div>
-                    <div>
-                        <label class="block mb-1">Defending</label>
-                        <input type="number" id="defending" name="defending" min="1" max="99" required
-                            class="w-full p-2 border rounded">
-                    </div>
-                    <div>
-                        <label class="block mb-1">Physicality</label>
-                        <input type="number" id="physicality" name="physicality" min="1" max="99" required
-                            class="w-full p-2 border rounded">
-                    </div>
-                </div>
+                        <!-- Additional Stats -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Dribbling</label>
+                                <input type="number" id="dribbling" name="dribbling" min="1" max="99" required
+                                    class="w-full p-2 text-sm border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Defending</label>
+                                <input type="number" id="defending" name="defending" min="1" max="99" required
+                                    class="w-full p-2 text-sm border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Physicality</label>
+                                <input type="number" id="physicality" name="physicality" min="1" max="99" required
+                                    class="w-full p-2 text-sm border rounded">
+                            </div>
+                        </div>
 
-                <!-- Informations supplémentaires -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block mb-1">Nationalité</label>
-                        <input type="text" id="nationality" name="nationality" required
-                            class="w-full p-2 border rounded">
-                    </div>
-                    <div>
-                        <label class="block mb-1">Club</label>
-                        <input type="text" id="club" name="club" required class="w-full p-2 border rounded">
-                    </div>
-                </div>
+                        <!-- Additional Info -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Nationality</label>
+                                <input type="text" id="nationality" name="nationality" required
+                                    class="w-full p-2 text-sm border rounded">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Club</label>
+                                <input type="text" id="club" name="club" required
+                                    class="w-full p-2 text-sm border rounded">
+                            </div>
+                        </div>
 
-                <!-- Boutons -->
-                <div class="flex space-x-4">
-                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-                        Ajouter
-                    </button>
-                    <button type="button" id="cancelBtn" class="flex-1 bg-gray-300 hover:bg-gray-400 py-2 px-4 rounded">
-                        Annuler
-                    </button>
+                        <!-- Action Buttons -->
+                        <div class="flex space-x-4 pt-4">
+                            <button type="submit"
+                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded text-sm sm:text-base">
+                                Add
+                            </button>
+                            <button type="button" id="cancelBtn"
+                                class="flex-1 bg-gray-300 hover:bg-gray-400 py-2 px-4 rounded text-sm sm:text-base">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-
-    <script src="/js/index.js"></script>
+    <script src="/js/field.js"></script>
 </body>
 
 </html>
