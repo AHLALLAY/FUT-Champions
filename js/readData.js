@@ -432,5 +432,17 @@ function initializeFilters() {
 }
 
 
+
+// Filter handling
+function filterPlayers() {
+    const position = document.getElementById('positionFilter').value;
+
+    const filteredPlayers = allPlayers.players.filter(player => {
+        return (!position || player.position === position);
+    });
+
+    renderPlayers(filteredPlayers);
+}
+
 // Initialize and render players on page load
 initializeFilters();
