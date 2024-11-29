@@ -495,27 +495,27 @@ function renderPlayers(players) {
             const statsContainer = card.querySelector('.grid');
             statsContainer.innerHTML = `
                 <div class="text-center">
-                    <div class="font-semibold">Diving</div>
+                    <div class="font-semibold">DIV</div>
                     <div>${player.diving || '-'}</div>
                 </div>
                 <div class="text-center">
-                    <div class="font-semibold">Handling</div>
+                    <div class="font-semibold">HAN</div>
                     <div>${player.handling || '-'}</div>
                 </div>
                 <div class="text-center">
-                    <div class="font-semibold">Kicking</div>
+                    <div class="font-semibold">KIC</div>
                     <div>${player.kicking || '-'}</div>
                 </div>
                 <div class="text-center">
-                    <div class="font-semibold">Reflexes</div>
+                    <div class="font-semibold">REF</div>
                     <div>${player.reflexes || '-'}</div>
                 </div>
                 <div class="text-center">
-                    <div class="font-semibold">Speed</div>
+                    <div class="font-semibold">SPE</div>
                     <div>${player.speed || '-'}</div>
                 </div>
                 <div class="text-center">
-                    <div class="font-semibold">Positioning</div>
+                    <div class="font-semibold">POS</div>
                     <div>${player.positioning || '-'}</div>
                 </div>
             `;
