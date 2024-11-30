@@ -67,7 +67,7 @@ L'application sauvegarde :
 
 ## Installation
 
-1. Cloner le dépôt
+1. Cloner le dépôt ```git clone https://github.com/AHLALLAY/FUT-Champions```
 2. Ouvrir index.html dans un navigateur
 3. Aucune dépendance supplémentaire requise
 
