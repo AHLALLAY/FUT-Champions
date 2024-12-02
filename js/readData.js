@@ -492,7 +492,7 @@ function renderPlayers(players) {
         `;
 
         // Check if the player is a goalkeeper (GK) and update stats
-        if (player.position === 'GK1' || player.position === 'GK1' || player.position === 'GK3'){
+        if (['GK1', 'GK2', 'GK3'].includes(player.position)){
             const statsContainer = card.querySelector('.grid');
             statsContainer.innerHTML = `
                 <div class="text-center">
