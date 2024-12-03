@@ -1,6 +1,11 @@
 # Gestionnaire Football Ultimate Team (FUT)
 
 Une application web pour la gestion d'équipes de football inspirée du mode *Ultimate Team* de FIFA. Cette application permet aux utilisateurs de créer et de gérer des équipes, de visualiser les joueurs sur un terrain de football, et de gérer les statistiques de chaque joueur dans un format simple et interactif.
+## ScreenShot
+
+![la page home](screenshot/home.png)
+![la page tarrain](screenshot/field.png)
+![la formulaire d'ajoute](screenshot/modal%20d'ajoute.png)
 
 ## Fonctionnalités
 
