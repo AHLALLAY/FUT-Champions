@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-
+    
     // Fonction pour filtrer les joueurs
     function filterPlayers() {
         const position = document.getElementById('positionFilter').value;
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (playersInStorage.length > 0) {
             renderPlayers(playersInStorage, false);
         } else {
-            container.innerHTML = '<p>Aucun joueur sélectionné.</p>';
+            container.innerHTML = '<p class="text-white">Aucun joueur sélectionné.</p>';
         }
     }
 

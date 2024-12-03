@@ -67,30 +67,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!field) return;
 
         // Style de base du terrain
-        field.className = 'relative w-full aspect-[16/9] bg-green-600 rounded-lg m-4 overflow-hidden';
+        field.className = 'relative w-full aspect-[16/9] rounded-lg m-4 overflow-hidden';
 
         // Définition des positions
         const positions = {
-            'GK': { top: '85%', left: '50%' },
-            'LB': { top: '70%', left: '20%' },
-            'CB1': { top: '70%', left: '40%' },
-            'CB2': { top: '70%', left: '60%' },
-            'RB': { top: '70%', left: '80%' },
-            'LW': { top: '45%', left: '20%' },
-            'CM1': { top: '45%', left: '40%' },
-            'CM2': { top: '45%', left: '60%' },
-            'RW': { top: '45%', left: '80%' },
-            'ST1': { top: '20%', left: '35%' },
-            'ST2': { top: '20%', left: '65%' }
+            'GK': { top: '85%', left: '40%' },
+            'LB': { top: '70%', left: '10%' },
+            'CB1': { top: '70%', left: '30%' },
+            'CB2': { top: '70%', left: '50%' },
+            'RB': { top: '70%', left: '70%' },
+            'LW': { top: '45%', left: '17%' },
+            'CM1': { top: '45%', left: '35%' },
+            'CM2': { top: '45%', left: '47%' },
+            'RW': { top: '45%', left: '63%' },
+            'ST1': { top: '30%', left: '30%' },
+            'ST2': { top: '30%', left: '50%' }
         };
-
-        // Marquages du terrain
-        field.innerHTML = `
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-52 h-52 border-2 border-white rounded-full"></div>
-            <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-white"></div>
-            <div class="absolute top-0 left-[15%] w-[70%] h-1/5 border-2 border-white"></div>
-            <div class="absolute bottom-0 left-[15%] w-[70%] h-1/5 border-2 border-white"></div>
-        `;
 
         // Création des positions des joueurs
         Object.entries(positions).forEach(([position, coords]) => {
@@ -102,10 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 absolute -translate-x-1/2 -translate-y-1/2
                 w-20 h-20
                 bg-white/30 hover:bg-white/50
-                border-2 border-white rounded-full
+                border-2 border-gray-400 rounded-full
                 flex items-center justify-center
                 cursor-pointer transition-colors
-                text-xs text-white font-bold
+                text-xs text-gray-600 font-bold
             `;
 
             playerSpot.innerHTML = position;
