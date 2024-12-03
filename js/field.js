@@ -46,12 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    function get_stored_players() {
+    function get_stored_mainPlayers() {
         return JSON.parse(localStorage.getItem('selectedPlayers') || '[]');
     }
 
     function save_to_localStorage(players) {
-        localStorage.setItem('selectedPlayers', JSON.stringify(players));
+        localStorage.setItem('reservedPlayer', JSON.stringify(players));
     }
 
     function initialize_field() {
@@ -62,18 +62,22 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Positions pour la formation 4-4-2
         const positions = {
-            'GK': { top: '85%', left: '50%' },
-            'LB': { top: '70%', left: '20%' },
+            'GK1': { top: '85%', left: '50%' },
+            'GK2': { top: '85%', left: '50%' },
+            'LB1': { top: '70%', left: '20%' },
             'CB1': { top: '70%', left: '40%' },
             'CB2': { top: '70%', left: '60%' },
-            'RB': { top: '70%', left: '80%' },
-            'LW': { top: '45%', left: '20%' },
+            'RB1': { top: '70%', left: '80%' },
+            'LW1': { top: '45%', left: '20%' },
+            'LW2': { top: '45%', left: '20%' },
             'CM1': { top: '45%', left: '40%' },
             'CM2': { top: '45%', left: '60%' },
-            'RW': { top: '45%', left: '80%' },
+            'RW1': { top: '45%', left: '80%' },
             'ST1': { top: '20%', left: '35%' },
             'ST2': { top: '20%', left: '65%' }
         };
+
+        
     
         // Marquages du terrain
         field.innerHTML =  `
@@ -110,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updatePlayers() {
-        const players = get_stored_players();
+        const players = get_stored_mainPlayers();
         
         players.forEach(player => {
             const spot = document.getElementById(`${player.position}`);
@@ -125,12 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initialize field when DOM is loaded
-    initialize_field();
-    
-    newPlayerBtn.addEventListener('click', openModal);
-
-    // Rest of your openModal function remains the same
     function openModal() {
         const modal = document.createElement('div');
         modal.classList.add('fixed', 'inset-0', 'bg-black', 'bg-opacity-50', 'z-50', 'flex', 'items-center', 'justify-center', 'p-4');
@@ -280,11 +278,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, {})
             };
 
-            const players = get_stored_players();
+            const players = get_stored_mainPlayers();
             players.push(player);
             save_to_localStorage(players);
             
             modal.remove();
         });
     }
+
+    newPlayerBtn.addEventListener('click', openModal);
+    
+    initialize_field();
 });

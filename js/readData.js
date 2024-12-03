@@ -481,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fonction pour initialiser les filtres
     function initializeFilters() {
-        const positions = [...new Set(allPlayers.players.map(player => player.position))];
+        const positions = [...new Set(allPlayers.players.map(player => player.position.substring(0,2)))];
         const positionFilter = document.getElementById('positionFilter');
         positionFilter.innerHTML = '<option value="">Toutes les positions</option>' +
             positions.map(position => `<option value="${position}">${position}</option>`).join('');
@@ -519,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function filterPlayers() {
         const position = document.getElementById('positionFilter').value;
         const filteredPlayers = allPlayers.players.filter(player =>
-            !position || player.position === position
+            !position || player.position.substring(0,2) === position
         );
         renderPlayers(filteredPlayers);
     }
