@@ -551,14 +551,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fonction pour rafraîchir la page
     function refreshPage() {
-        // localStorage.clear();
         location.reload();
     }
 
+    function clear_storage() {
+        const reponse = confirm('vous étes en train de supprimer les joueur sélectionné ?')
+        if(reponse) {
+            localStorage.clear();
+            refreshPage();
+            displaySelectedPlayers();
+        }
+    }
     // Event listeners
     document.getElementById('positionFilter').addEventListener('change', filterPlayers);
     document.getElementById('selected_player').addEventListener('click', displaySelectedPlayers);
     document.getElementById('refresh').addEventListener('click', refreshPage);
+    document.getElementById('delete').addEventListener('click', clear_storage);
 
     // Initialisation
     initializeFilters();
