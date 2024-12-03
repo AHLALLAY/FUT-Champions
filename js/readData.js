@@ -481,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fonction pour initialiser les filtres
     function initializeFilters() {
-        const positions = [...new Set(allPlayers.players.map(player => player.position.substring(0,2)))];
+        const positions = [...new Set(allPlayers.players.map(player => player.position.substring(0, 2)))];
         const positionFilter = document.getElementById('positionFilter');
         positionFilter.innerHTML = '<option value="">Toutes les positions</option>' +
             positions.map(position => `<option value="${position}">${position}</option>`).join('');
@@ -519,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function filterPlayers() {
         const position = document.getElementById('positionFilter').value;
         const filteredPlayers = allPlayers.players.filter(player =>
-            !position || player.position.substring(0,2) === position
+            !position || player.position.substring(0, 2) === position
         );
         renderPlayers(filteredPlayers);
     }
@@ -549,14 +549,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Fonction pour rafraîchir la page
+    function player_selected_list() {
+        const playerSelected = document.getElementById('playerSelected');
+        playerSelected.innerHTML = '<option value="default">Selectionner un Joueur</option>';
+
+        playersInStorage.forEach(player => {
+            const option = document.createElement('option');
+            option.value = player.name;
+            option.textContent = player.name;
+            playerSelected.appendChild(option);
+
+            // console.log(player.name);
+        });
+    }
+
+    function remove_main_player() {    
+        const player_to_remove = document.getElementById('playerSelected');
+        const updatedPlayers = playersInStorage.filter(player => player.name !== player_to_remove.value);
+        if (updatedPlayers){
+            let reponde = confirm(`tu es sûr pour exclus ${player_to_remove.value} ?`);
+            if (reponde){
+                localStorage.setItem('selectedPlayers', JSON.stringify(updatedPlayers));
+                alert(`${player_to_remove.value} est exclus`);
+            }else {
+                alert(`${player_to_remove.value} est heureux !!`);
+            }
+        }        
+        // renderPlayers();
+        displaySelectedPlayers();
+    }
+    
+
     function refreshPage() {
         location.reload();
     }
 
     function clear_storage() {
         const reponse = confirm('vous étes en train de supprimer les joueur sélectionné ?')
-        if(reponse) {
+        if (reponse) {
             localStorage.clear();
             refreshPage();
             displaySelectedPlayers();
@@ -567,8 +597,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('selected_player').addEventListener('click', displaySelectedPlayers);
     document.getElementById('refresh').addEventListener('click', refreshPage);
     document.getElementById('delete').addEventListener('click', clear_storage);
+    document.getElementById('Remove').addEventListener('click', remove_main_player);
 
     // Initialisation
     initializeFilters();
     renderPlayers(allPlayers.players);
+    player_selected_list();
 });
