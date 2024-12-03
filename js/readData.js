@@ -420,259 +420,147 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
-
     const playersInStorage = JSON.parse(localStorage.getItem('selectedPlayers')) || [];
 
-    // Initialize filter options
+    // Fonction pour créer les statistiques du joueur
+    function createPlayerStats(player) {
+        const statsConfig = player.position.startsWith('GK') ? [
+            { label: 'DIV', value: player.diving },
+            { label: 'HAN', value: player.handling },
+            { label: 'KIC', value: player.kicking },
+            { label: 'REF', value: player.reflexes },
+            { label: 'SPE', value: player.speed },
+            { label: 'POS', value: player.positioning }
+        ] : [
+            { label: 'PAC', value: player.pace },
+            { label: 'SHO', value: player.shooting },
+            { label: 'PAS', value: player.passing },
+            { label: 'DRI', value: player.dribbling },
+            { label: 'DEF', value: player.defending },
+            { label: 'PHY', value: player.physical }
+        ];
+
+        return `
+            <div class="grid grid-cols-3 gap-2 text-sm">
+                ${statsConfig.map(stat => `
+                    <div class="text-center">
+                        <div class="font-semibold">${stat.label}</div>
+                        <div>${stat.value || '-'}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    // Fonction pour créer le HTML d'une carte de joueur
+    function createPlayerCardHTML(player) {
+        return `
+            <div class="flex items-center space-x-4">
+                <img src="${player.photo}" alt="${player.name}" class="w-16 h-16 rounded-full object-cover"/>
+                <div>
+                    <h3 class="font-bold">${player.name}</h3>
+                    <div class="flex items-center space-x-2">
+                        <img src="${player.flag}" alt="${player.nationality}" class="w-6 h-4"/>
+                        <span class="text-sm text-gray-600">${player.nationality}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <img src="${player.logo}" alt="${player.club}" class="w-8 h-8"/>
+                    <span class="text-sm">${player.club}</span>
+                </div>
+                <div>
+                    <span class="text-lg font-bold text-blue-600">${player.rating}</span>
+                    <span class="text-lg font-bold text-blue-600">${player.position}</span>
+                </div>
+            </div>
+            ${createPlayerStats(player)}
+        `;
+    }
+
+    // Fonction pour initialiser les filtres
     function initializeFilters() {
         const positions = [...new Set(allPlayers.players.map(player => player.position))];
-
         const positionFilter = document.getElementById('positionFilter');
-        positions.forEach(position => {
-            const option = document.createElement('option');
-            option.value = position;
-            option.textContent = position;
-            positionFilter.appendChild(option);
-        });
+        positionFilter.innerHTML = '<option value="">Toutes les positions</option>' +
+            positions.map(position => `<option value="${position}">${position}</option>`).join('');
     }
 
-    // Render players
-    function renderPlayers(players) {
+    // Fonction pour afficher les joueurs
+    function renderPlayers(players, isSelectable = true) {
         const container = document.getElementById('players');
-        container.innerHTML = '';
-
-        players.forEach(player => {
-            const card = document.createElement('div');
-            card.className = 'bg-white rounded-lg shadow-lg p-4 space-y-4';
-
-
-            card.innerHTML = `
-                <div class="flex items-center space-x-4">
-                    <img src="${player.photo}" alt="${player.name}" class="w-16 h-16 rounded-full object-cover"/>
-                    <div>
-                        <h3 class="font-bold">${player.name}</h3>
-                        <div class="flex items-center space-x-2">
-                            <img src="${player.flag}" alt="${player.nationality}" class="w-6 h-4"/>
-                            <span class="text-sm text-gray-600">${player.nationality}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <img src="${player.logo}" alt="${player.club}" class="w-8 h-8"/>
-                        <span class="text-sm">${player.club}</span>
-                    </div>
-                    <div>
-                        <span class="text-lg font-bold text-blue-600">${player.rating}</span>
-                        <span class="text-lg font-bold text-blue-600">${player.position}</span>
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-2 text-sm">
-                    <div class="text-center">
-                        <div class="font-semibold">PAC</div>
-                        <div>${player.pace || '-'}</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="font-semibold">SHO</div>
-                        <div>${player.shooting || '-'}</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="font-semibold">PAS</div>
-                        <div>${player.passing || '-'}</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="font-semibold">DRI</div>
-                        <div>${player.dribbling || '-'}</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="font-semibold">DEF</div>
-                        <div>${player.defending || '-'}</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="font-semibold">PHY</div>
-                        <div>${player.physical || '-'}</div>
-                    </div>
+        container.innerHTML = players.map(player => {
+            const card = `
+                <div class="bg-white rounded-lg shadow-lg p-4 space-y-4 ${isSelectable ? 'cursor-pointer' : ''}" 
+                     data-player-id="${player.name}">
+                    ${createPlayerCardHTML(player)}
                 </div>
             `;
+            return card;
+        }).join('');
 
-            // Check if the player is a goalkeeper (GK) and update stats
-            if (player.position.startsWith('GK')) {
-                const statsContainer = card.querySelector('.grid');
-                statsContainer.innerHTML = `
-                    <div class="text-center">
-                        <div class="font-semibold">DIV</div>
-                        <div>${player.diving || '-'}</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="font-semibold">HAN</div>
-                        <div>${player.handling || '-'}</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="font-semibold">KIC</div>
-                        <div>${player.kicking || '-'}</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="font-semibold">REF</div>
-                        <div>${player.reflexes || '-'}</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="font-semibold">SPE</div>
-                        <div>${player.speed || '-'}</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="font-semibold">POS</div>
-                        <div>${player.positioning || '-'}</div>
-                    </div>
-                `;
-            }
-
-            // Add click event listener to each card
-            card.addEventListener('click', () => {
-                addToLocalStorage(player);
-                card.classList.add('border', 'border-green-500');
+        if (isSelectable) {
+            container.querySelectorAll('[data-player-id]').forEach(card => {
+                card.addEventListener('click', () => {
+                    const player = players.find(p => p.name === card.dataset.playerId);
+                    if (playersInStorage.length < 11) {
+                        addToLocalStorage(player);
+                        card.classList.add('border', 'border-green-500');
+                    } else {
+                        alert(`team est déjà complete.`);
+                    }
+                });
             });
-
-            container.appendChild(card);
-        });
+        }
     }
 
-    // Filter handling
+    // Fonction pour filtrer les joueurs
     function filterPlayers() {
         const position = document.getElementById('positionFilter').value;
-
-        const filteredPlayers = allPlayers.players.filter(player => {
-            return (!position || player.position === position);
-        });
-
+        const filteredPlayers = allPlayers.players.filter(player =>
+            !position || player.position === position
+        );
         renderPlayers(filteredPlayers);
     }
 
-    // Function to add a player to localStorage
+    // Fonction pour ajouter un joueur au localStorage
     function addToLocalStorage(player) {
-        // Check if the player is already in the storage
         const existingPlayer = playersInStorage.find(p => p.name === player.name);
-        if (!existingPlayer) {
-            playersInStorage.push(player);
-            localStorage.setItem('selectedPlayers', JSON.stringify(playersInStorage));
-            // alert(`${player.name} has been added to your selected players.`);
-            
+        if (playersInStorage.length < 11) {
+            if (!existingPlayer) {
+                playersInStorage.push(player);
+                localStorage.setItem('selectedPlayers', JSON.stringify(playersInStorage));
+            } else {
+                alert(`${player.name} est déjà dans votre sélection.`);
+            }
         } else {
-            alert(`${player.name} is already in your selected players.`);
+            alert(`team est déjà complete.`);
         }
     }
 
-    function displaySelectedPlayer() {
+    // Fonction pour afficher les joueurs sélectionnés
+    function displaySelectedPlayers() {
         const container = document.getElementById('players');
-
-        // Clear any existing content
-        container.innerHTML = '';
-
-        // Check if there are selected players in localStorage
         if (playersInStorage.length > 0) {
-            // Render selected players
-            playersInStorage.forEach(player => {
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-lg shadow-lg p-4 space-y-4';
-
-                card.innerHTML = `
-                    <div class="flex items-center space-x-4">
-                        <img src="${player.photo}" alt="${player.name}" class="w-16 h-16 rounded-full object-cover"/>
-                        <div>
-                            <h3 class="font-bold">${player.name}</h3>
-                            <div class="flex items-center space-x-2">
-                                <img src="${player.flag}" alt="${player.nationality}" class="w-6 h-4"/>
-                                <span class="text-sm text-gray-600">${player.nationality}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-2">
-                            <img src="${player.logo}" alt="${player.club}" class="w-8 h-8"/>
-                            <span class="text-sm">${player.club}</span>
-                        </div>
-                        <div>
-                            <span class="text-lg font-bold text-blue-600">${player.rating}</span>
-                            <span class="text-lg font-bold text-blue-600">${player.position}</span>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 text-sm">
-                        <div class="text-center">
-                            <div class="font-semibold">PAC</div>
-                            <div>${player.pace || '-'}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-semibold">SHO</div>
-                            <div>${player.shooting || '-'}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-semibold">PAS</div>
-                            <div>${player.passing || '-'}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-semibold">DRI</div>
-                            <div>${player.dribbling || '-'}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-semibold">DEF</div>
-                            <div>${player.defending || '-'}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-semibold">PHY</div>
-                            <div>${player.physical || '-'}</div>
-                        </div>
-                    </div>
-                `;
-
-                // Check if the player is a goalkeeper (GK) and update stats
-                if (player.position.startsWith('GK')) {
-                    const statsContainer = card.querySelector('.grid');
-                    statsContainer.innerHTML = `
-                        <div class="text-center">
-                            <div class="font-semibold">DIV</div>
-                            <div>${player.diving || '-'}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-semibold">HAN</div>
-                            <div>${player.handling || '-'}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-semibold">KIC</div>
-                            <div>${player.kicking || '-'}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-semibold">REF</div>
-                            <div>${player.reflexes || '-'}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-semibold">SPE</div>
-                            <div>${player.speed || '-'}</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-semibold">POS</div>
-                            <div>${player.positioning || '-'}</div>
-                        </div>
-                    `;
-                }
-
-                container.appendChild(card);
-            });
+            renderPlayers(playersInStorage, false);
         } else {
-            // If no players are selected, show a message
-            container.innerHTML = `<p>No players selected yet.</p>`;
+            container.innerHTML = '<p>Aucun joueur sélectionné.</p>';
         }
     }
 
-    function refrechPage() {
-        // card.classList.remove('border', 'border-green-500');
-        localStorage.clear();
+    // Fonction pour rafraîchir la page
+    function refreshPage() {
+        // localStorage.clear();
         location.reload();
     }
+
     // Event listeners
     document.getElementById('positionFilter').addEventListener('change', filterPlayers);
-    document.getElementById('selected_player').addEventListener('click', displaySelectedPlayer);
-    document.getElementById('refresh').addEventListener('click', refrechPage);
+    document.getElementById('selected_player').addEventListener('click', displaySelectedPlayers);
+    document.getElementById('refresh').addEventListener('click', refreshPage);
 
-    // Initialize and render players on page load
+    // Initialisation
     initializeFilters();
     renderPlayers(allPlayers.players);
 });

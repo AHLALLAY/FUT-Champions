@@ -1,181 +1,290 @@
-// Constants and state management
-const STORAGE_KEY = 'selectedPlayers';
-
-// DOM Elements
-const playerModal = document.getElementById('playerModal');
-const newPlayerBtn = document.getElementById('newPlayerBtn');
-const cancelBtn = document.getElementById('cancelBtn');
-const playerForm = document.getElementById('playerForm');
-const teamContainer = document.getElementById('team');
-const fieldContainer = document.getElementById('field');
-const formationSelect = document.getElementById('formule');
-const formationSelectMobile = document.getElementById('formule-mobile');
-
-// State
-let players = [];
-let currentFormation = '4-4-2';
-
-// Modal Management
-function showModal() {
-    playerModal.classList.remove('hidden');
-}
-
-function hideModal() {
-    playerModal.classList.add('hidden');
-    playerForm.reset();
-}
-
-// player Management
-function createPlayerCard(player) {
-    const card = document.createElement('div');
-    card.className = 'bg-white p-4 rounded-lg shadow-md mb-4';
-    card.dataset.playerId = player.id;
-
-    card.innerHTML = `
-        <div class="flex justify-between items-center">
-            <div>
-                <h3 class="text-lg font-semibold">${player.name}</h3>
-                <p class="text-gray-600 text-sm">Overall: ${player.overall}</p>
-                <p class="text-gray-600 text-sm">Position: ${player.position}</p>
-            </div>
-            <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm delete-btn">
-                Delete
-            </button>
-        </div>
-    `;
-
-    // Add delete functionality
-    card.querySelector('.delete-btn').addEventListener('click', () => {
-        deletePlayer(player.id);
-    });
-
-    return card;
-}
-
-function addPlayer(formData) {
-    const newPlayer = {
-        id: Date.now().toString(),
-        name: formData.get('name'),
-        shortName: formData.get('short_name'),
-        overall: formData.get('overall'),
-        position: formData.get('player_positions'),
-        age: formData.get('age'),
-        pace: formData.get('pace'),
-        shooting: formData.get('shooting'),
-        passing: formData.get('passing'),
-        dribbling: formData.get('dribbling'),
-        defending: formData.get('defending'),
-        physicality: formData.get('physicality'),
-        nationality: formData.get('nationality'),
-        club: formData.get('club')
-    };
-
-    players.push(newPlayer);
-    saveToLocalStorage();
-    renderPlayers();
-    renderField();
-    hideModal();
-}
-
-function deletePlayer(playerId) {
-    players = players.filter(player => player.id !== playerId);
-    saveToLocalStorage();
-    renderPlayers();
-    renderField();
-}
-
-function renderPlayers() {
-    teamContainer.innerHTML = '';
-    players.forEach(player => {
-        teamContainer.appendChild(createPlayerCard(player));
-    });
-}
-
-function renderField() {
-    fieldContainer.innerHTML = `
-        <div class="relative w-full" style="padding-bottom: 150%;">
-            <div class="absolute inset-0 bg-green-600 rounded-lg">
-                ${getFormationLayout(currentFormation)}
-            </div>
-        </div>
-    `;
-}
-
-function getFormationLayout(formation) {
-    // Add formation-specific player positions
-    const positions = {
-        '4-4-2': {
-            'GK': { top: '50%', left: '10%' },
-            'LB': { top: '10%', left: '20%' },
-            'CB1': { top: '30%', left: '20%' },
-            'CB2': { top: '50%', left: '20%' },
-            'RB': { top: '70%', left: '20%' },
-            'LM': { top: '10%', left: '50%' },
-            'CM1': { top: '30%', left: '50%' },
-            'CM2': { top: '50%', left: '50%' },
-            'RM': { top: '70%', left: '50%' },
-            'ST1': { top: '30%', left: '70%' },
-            'ST2': { top: '60%', left: '70%' }
-        }
-    };
-
-    let html = '';
-    for (const position in positions[formation]) {
-        if (positions[formation].hasOwnProperty(position)) {
-            const coords = positions[formation][position];
-            const player = players.find(p => p.position === position);
-            const playerName = player ? player.name : position;
-            const playerClass = player ? 'text-xs font-bold' : 'text-xs text-gray-400';
-    
-            html += `
-                <div class="absolute transform -translate-x-1/2 -translate-y-1/2" 
-                     style="top: ${coords.top}; left: ${coords.left}">
-                    <div class="w-12 h-12 bg-white flex items-center justify-center shadow-lg">
-                        <span class="${playerClass}">${playerName}</span>
-                    </div>
-                </div>
-            `;
-        }
-    }
-    return html;
-}
-
-function saveToLocalStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(players));
-}
-
-function loadFromLocalStorage() {
-    const storedPlayers = localStorage.getItem(STORAGE_KEY);
-    if (storedPlayers) {
-        players = JSON.parse(storedPlayers);
-        renderPlayers();
-        renderField();
-    }
-}
-
-// Event Listeners
-newPlayerBtn.addEventListener('click', showModal);
-cancelBtn.addEventListener('click', hideModal);
-
-playerForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const formData = new FormData(playerForm);
-    addPlayer(formData);
-});
-
-formationSelect.addEventListener('change', () => {
-    formationSelectMobile.value = currentFormation;
-    renderField();
-});
-
-formationSelectMobile.addEventListener('change', (e) => {
-    currentFormation = e.target.value;
-    formationSelect.value = currentFormation;
-    renderField();
-});
-
-// Initialize application
 document.addEventListener('DOMContentLoaded', () => {
-    loadFromLocalStorage();
-    renderField();
+    const newPlayerBtn = document.getElementById('newPlayerBtn');
+    const field = document.getElementById('field');
+
+    function change_stats(playerPosition) {
+        const statsConfig = playerPosition.startsWith('GK') ? [
+            { label: 'Diving', icon: '🧤' },
+            { label: 'Handling', icon: '✋' },
+            { label: 'Kicking', icon: '👟' },
+            { label: 'Reflexes', icon: '⚡' },
+            { label: 'Speed', icon: '🏃' },
+            { label: 'Positioning', icon: '👀' }
+        ] : [
+            { label: 'Pace', icon: '⚡' },
+            { label: 'Shooting', icon: '🎯' },
+            { label: 'Passing', icon: '📊' },
+            { label: 'Dribbling', icon: '⚽' },
+            { label: 'Defending', icon: '🛡️' },
+            { label: 'Physical', icon: '💪' }
+        ];
+
+        return `
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+                ${statsConfig.map(stat => `
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xl">${stat.icon}</span>
+                            <div class="font-medium text-gray-700">${stat.label}</div>
+                        </div>
+                        <div class="relative">
+                            <input 
+                                type="number" 
+                                id="${stat.label.toLowerCase()}" 
+                                name="${stat.label.toLowerCase()}" 
+                                min="1" 
+                                max="99" 
+                                required 
+                                class="w-full p-2 text-sm border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                oninput="this.value = this.value > 99 ? 99 : Math.max(0, this.value)"
+                            >
+                            <span class="absolute right-2 top-2 text-xs text-gray-400">/99</span>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function get_stored_players() {
+        return JSON.parse(localStorage.getItem('selectedPlayers') || '[]');
+    }
+
+    function save_to_localStorage(players) {
+        localStorage.setItem('selectedPlayers', JSON.stringify(players));
+    }
+
+    function initialize_field() {
+        if (!field) return; // Guard clause if field element doesn't exist
+        
+        // Structure de base du terrain
+        field.className = 'relative w-full aspect-[16/9] bg-green-600 rounded-lg m-4 overflow-hidden';
+        
+        // Positions pour la formation 4-4-2
+        const positions = {
+            'GK': { top: '85%', left: '50%' },
+            'LB': { top: '70%', left: '20%' },
+            'CB1': { top: '70%', left: '40%' },
+            'CB2': { top: '70%', left: '60%' },
+            'RB': { top: '70%', left: '80%' },
+            'LW': { top: '45%', left: '20%' },
+            'CM1': { top: '45%', left: '40%' },
+            'CM2': { top: '45%', left: '60%' },
+            'RW': { top: '45%', left: '80%' },
+            'ST1': { top: '20%', left: '35%' },
+            'ST2': { top: '20%', left: '65%' }
+        };
+    
+        // Marquages du terrain
+        field.innerHTML =  `
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-52 h-52 border-2 border-white rounded-full"></div> <!-- cercel de milieu -->
+            <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-white"></div> <!-- ligne de milieu -->
+            <div class="absolute top-0 left-[15%] w-[70%] h-1/5 border-2 border-white"></div> <!-- Goole en haut -->
+            <div class="absolute bottom-0 left-[15%] w-[70%] h-1/5 border-2 border-white"></div> <!-- Goole en nas -->
+        `;
+    
+        // Créer les positions des joueurs
+        Object.entries(positions).forEach(([position, coords]) => {
+            const playerSpot = document.createElement('div');
+            playerSpot.id = `${position}`;
+            playerSpot.style.top = coords.top;
+            playerSpot.style.left = coords.left;
+            playerSpot.innerHTML = position;
+    
+            playerSpot.className = `
+                absolute -translate-x-1/2 -translate-y-1/2
+                w-20 h-20
+                bg-white/30 hover:bg-white/50
+                border-2 border-white rounded-full
+                flex items-center justify-center
+                cursor-pointer transition-colors
+                text-xs text-gray-700 font-bold
+            `;
+            
+            field.appendChild(playerSpot);
+        });
+    
+        // Update players initially and when storage changes
+        updatePlayers();
+        window.addEventListener('storage', updatePlayers);
+    }
+
+    function updatePlayers() {
+        const players = get_stored_players();
+        
+        players.forEach(player => {
+            const spot = document.getElementById(`${player.position}`);
+            if (spot) {
+                spot.innerHTML = `
+                    <div class="text-center text-white">
+                        <div class="text-xs">${player.name}</div>
+                        <div class="text-xs">${player.position}</div>
+                    </div>
+                `;
+            }
+        });
+    }
+
+    // Initialize field when DOM is loaded
+    initialize_field();
+    
+    newPlayerBtn.addEventListener('click', openModal);
+
+    // Rest of your openModal function remains the same
+    function openModal() {
+        const modal = document.createElement('div');
+        modal.classList.add('fixed', 'inset-0', 'bg-black', 'bg-opacity-50', 'z-50', 'flex', 'items-center', 'justify-center', 'p-4');
+
+        modal.innerHTML = `
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Add New Player</h2>
+                        <button id="cancelBtn" class="text-gray-400 hover:text-red-600 transition-colors">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <form id="playerForm" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                                <input 
+                                    type="text" 
+                                    id="playerName" 
+                                    name="name" 
+                                    required 
+                                    class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Enter player name"
+                                >
+                            </div>
+                            
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-700">Age</label>
+                                <input 
+                                    type="number" 
+                                    id="playerAge" 
+                                    name="age" 
+                                    required 
+                                    min="16" 
+                                    max="45" 
+                                    class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Enter age"
+                                >
+                            </div>
+
+                            <div class="space-y-2 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700">Position</label>
+                                <select 
+                                    id="position" 
+                                    name="player_positions" 
+                                    required 
+                                    class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                >
+                                    <option value="">Select position...</option>
+                                    <optgroup label="Goalkeeper">
+                                        <option value="GK">Goalkeeper (GK)</option>
+                                    </optgroup>
+                                    <optgroup label="Defenders">
+                                        <option value="LB">Left Back (LB)</option>
+                                        <option value="CB1">Center Back 1 (CB1)</option>
+                                        <option value="CB2">Center Back 2 (CB2)</option>
+                                        <option value="RB">Right Back (RB)</option>
+                                    </optgroup>
+                                    <optgroup label="Midfielders">
+                                        <option value="LM">Left Midfielder (LM)</option>
+                                        <option value="CM1">Center Midfielder 1 (CM1)</option>
+                                        <option value="CM2">Center Midfielder 2 (CM2)</option>
+                                        <option value="RM">Right Midfielder (RM)</option>
+                                    </optgroup>
+                                    <optgroup label="Forwards">
+                                        <option value="ST1">Striker 1 (ST1)</option>
+                                        <option value="ST2">Striker 2 (ST2)</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="statsContainer">
+                            ${change_stats('GK')}
+                        </div>
+
+                        <div class="flex gap-4 pt-6">
+                            <button 
+                                type="submit" 
+                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-md font-medium transition-colors"
+                            >
+                                Add Player
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-6 py-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                                onclick="this.closest('.fixed').remove()"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Fermeture du modal
+        modal.querySelector('#cancelBtn').addEventListener('click', () => modal.remove());
+
+        // Fermeture en cliquant en dehors du modal
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.remove();
+        });
+
+        // Gestion de la position
+        const positionSelect = modal.querySelector('#position');
+        positionSelect.addEventListener('change', function() {
+            const statsContainer = modal.querySelector('#statsContainer');
+            statsContainer.innerHTML = check_position(this.value);
+        });
+
+        // Gestion du formulaire
+        const form = modal.querySelector('#playerForm');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const statsInputs = modal.querySelectorAll('#statsContainer input[type="number"]');
+            let isValid = true;
+            
+            statsInputs.forEach(input => {
+                if (!input.value || input.value < 1 || input.value > 99) {
+                    isValid = false;
+                    input.classList.add('border-red-500');
+                } else {
+                    input.classList.remove('border-red-500');
+                }
+            });
+
+            if (!isValid) {
+                alert('Please ensure all stats are between 1 and 99');
+                return;
+            }
+
+            const player = {
+                name: modal.querySelector('#playerName').value,
+                age: modal.querySelector('#playerAge').value,
+                position: modal.querySelector('#position').value,
+                stats: Array.from(statsInputs).reduce((acc, input) => {
+                    acc[input.name] = parseInt(input.value);
+                    return acc;
+                }, {})
+            };
+
+            const players = get_stored_players();
+            players.push(player);
+            save_to_localStorage(players);
+            
+            modal.remove();
+        });
+    }
 });

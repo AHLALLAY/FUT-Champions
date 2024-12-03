@@ -1,29 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Players Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100">
     <div class="flex flex-col sm:flex-row min-h-screen">
         <!-- Sidebar -->
         <aside class="w-full sm:w-64 bg-gray-800 text-white p-4 sm:p-6">
             <nav class="space-y-6">
+                <!-- Header -->
+                <h2 class="text-xl sm:text-2xl font-bold text-white">FUT Players</h2>
                 <!-- Home Button -->
                 <header class="space-y-4">
-                    <a href="/views/field.html" class="block px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-center transition">
+                    <a href="/views/field.html"
+                        class="block px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-center transition">
                         Display Field
                     </a>
                     <div class="flex">
-                        <button id="selected_player" class="block px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-center transition">
+                        <button id="selected_player"
+                            class="block px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-center transition">
                             Selected Player
                         </button>
                         <button id="refresh">
-                            <img src="/asset/refresh-svgrepo-com.svg" alt="refresh" 
-                            class="w-8 h-8 m-2 rounded-full">
-                        </button>                        
+                            <img src="/asset/refresh-svgrepo-com.svg" alt="refresh" class="w-8 h-8 m-2 rounded-full">
+                        </button>
                     </div>
                 </header>
 
@@ -43,12 +48,14 @@
 
         <!-- Main Content -->
         <main class="flex-1 p-4 sm:p-8 overflow-auto">
-            <section id="players" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6" aria-label="Players Grid">
+            <section id="players" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
+                aria-label="Players Grid">
                 <!-- Players will be inserted here -->
             </section>
         </main>
     </div>
 
-    <script src="/JS/readData.js"></script>
+    <script src="/js/readData.js"></script>
 </body>
+
 </html>
